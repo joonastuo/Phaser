@@ -21,7 +21,15 @@ PhaserAudioProcessor::PhaserAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+	mState(*this, nullptr, Identifier("PhaserPlugin"),
+		{
+			  std::make_unique<AudioParameterFloat>("speed",
+													 "Speed",
+													 0.0,
+													 100.0,
+													 0.0)
+		})
 #endif
 {
 }

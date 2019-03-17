@@ -11,7 +11,14 @@
       <FILE id="eer2T4" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="RlHGqz" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <GROUP id="{9F4EBF06-C7FC-DE00-C7E1-9737341462B6}" name="AudioDSP"/>
+      <GROUP id="{9F4EBF06-C7FC-DE00-C7E1-9737341462B6}" name="AudioDSP">
+        <FILE id="XNgTJe" name="DCBlocker.cpp" compile="1" resource="0" file="Source/DCBlocker.cpp"/>
+        <FILE id="dujBmX" name="DCBlocker.h" compile="0" resource="0" file="Source/DCBlocker.h"/>
+        <FILE id="LyFPVn" name="FirstOrderAllPass.cpp" compile="1" resource="0"
+              file="Source/FirstOrderAllPass.cpp"/>
+        <FILE id="L9JkE5" name="FirstOrderAllPass.h" compile="0" resource="0"
+              file="Source/FirstOrderAllPass.h"/>
+      </GROUP>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
