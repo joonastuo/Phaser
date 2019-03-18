@@ -23,6 +23,5 @@ public:
 
 private:
 	AudioProcessorValueTreeState& mState;
-	std::vector<float> mPreviousInput;
-	std::vector<float> mPreviousOutput;
+	std::vector<float> mXh;
 };

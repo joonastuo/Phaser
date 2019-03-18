@@ -24,15 +24,18 @@ void DCBlocker::prepare(const int& numChannels)
 {
 	for (auto channel = 0; channel < numChannels; ++channel)
 	{
-		mXm1.push_back(0.f);
-		mXm2.push_back(0.f);
-		mYm1.push_back(0.f);
-		mYm2.push_back(0.f);
+		mXh.push_back(std::vector<float> {0.f, 0.f});
 	}
 }
 
 void DCBlocker::process(AudioBuffer<float>& buffer)
 {
+	// Filter coefficients
+	const float p = 0.992f;
+	const float b0 = (1.f + p) / 2.f;
+	const float b2 = -1.f * b0;
+	const float a2 = p;
+
 	for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
 	{
 		const float* input = buffer.getReadPointer(channel);
@@ -40,11 +43,9 @@ void DCBlocker::process(AudioBuffer<float>& buffer)
 
 		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
-			output[sample] = mA * input[sample] - mA * mXm2[channel] + mP * mYm2[channel];
-			mXm2[channel] = mXm1[channel];
-			mYm2[channel] = mYm1[channel];
-			mXm1[channel] = input[sample];
-			mYm1[channel] = output[sample];
+			output[sample] = b0 * input[sample] + mXh[channel][1];
+			mXh[channel][1] = mXh[channel][0];
+			mXh[channel][0] = b2 * input[sample] + a2 * output[sample];
 		}
 	}
 }

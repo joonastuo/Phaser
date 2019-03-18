@@ -23,10 +23,5 @@ public:
 private:
 
 	int mNumChannels = 2;
-	const float mP = 0.992;
-	const float mA = (1 + mP) / 2;
-	std::vector<float> mXm1;
-	std::vector<float> mXm2;
-	std::vector<float> mYm1;
-	std::vector<float> mYm2;
+	std::vector<std::vector<float>> mXh;
 };

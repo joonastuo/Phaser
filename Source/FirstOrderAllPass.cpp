@@ -25,8 +25,7 @@ void FirstOrderAllPass::prepare(const int& numChannels)
 {
 	for (auto channel = 0; channel < numChannels; ++channel)
 	{
-		mPreviousInput.push_back(0.f);
-		mPreviousOutput.push_back(0.f);
+		mXh.push_back(0.f);
 	}
 }
 
@@ -41,9 +40,8 @@ void FirstOrderAllPass::process(AudioBuffer<float>& buffer)
 
 		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
 		{
-			output[sample] = a1 * input[sample] + mPreviousInput[channel] - a1 * mPreviousOutput[channel];
-			mPreviousInput[channel] = input[sample];
-			mPreviousOutput[channel] = output[sample];
+			output[sample] = a1 * input[sample] + mXh[channel];
+			mXh[channel] = input[sample] - a1 * output[sample];
 		}
 	}
 }
