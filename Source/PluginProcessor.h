@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Phaser.h"
 
 //==============================================================================
 /**
@@ -57,6 +58,7 @@ public:
 
 private:
 	AudioProcessorValueTreeState mState;
+	Phaser mPhaser;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaserAudioProcessor)

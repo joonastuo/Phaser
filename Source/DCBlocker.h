@@ -19,7 +19,7 @@ public:
 	DCBlocker();
 	~DCBlocker();
 	void prepare(const int& numChannels);
-	void process(AudioBuffer<float>& buffer);
+	void process(dsp::ProcessContextReplacing<float>& context);
 private:
 
 	int mNumChannels = 2;

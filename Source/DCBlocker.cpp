@@ -28,20 +28,23 @@ void DCBlocker::prepare(const int& numChannels)
 	}
 }
 
-void DCBlocker::process(AudioBuffer<float>& buffer)
+void DCBlocker::process(dsp::ProcessContextReplacing<float>& context)
 {
+	dsp::AudioBlock<float> inputBlock = context.getInputBlock();
+	dsp::AudioBlock<float> outputBlock = context.getOutputBlock();
+
 	// Filter coefficients
 	const float p = 0.992f;
 	const float b0 = (1.f + p) / 2.f;
 	const float b2 = -1.f * b0;
 	const float a2 = p;
 
-	for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
+	for (auto channel = 0; channel < inputBlock.getNumChannels(); ++channel)
 	{
-		const float* input = buffer.getReadPointer(channel);
-		float* output = buffer.getWritePointer(channel);
+		const float* input = inputBlock.getChannelPointer(channel);
+		float* output = outputBlock.getChannelPointer(channel);
 
-		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
+		for (auto sample = 0; sample < inputBlock.getNumSamples(); ++sample)
 		{
 			output[sample] = b0 * input[sample] + mXh[channel][1];
 			mXh[channel][1] = mXh[channel][0];

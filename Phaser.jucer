@@ -12,6 +12,8 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="RlHGqz" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <GROUP id="{9F4EBF06-C7FC-DE00-C7E1-9737341462B6}" name="AudioDSP">
+        <FILE id="CZ7CsL" name="Phaser.cpp" compile="1" resource="0" file="Source/Phaser.cpp"/>
+        <FILE id="o7R9q4" name="Phaser.h" compile="0" resource="0" file="Source/Phaser.h"/>
         <FILE id="XNgTJe" name="DCBlocker.cpp" compile="1" resource="0" file="Source/DCBlocker.cpp"/>
         <FILE id="dujBmX" name="DCBlocker.h" compile="0" resource="0" file="Source/DCBlocker.h"/>
         <FILE id="LyFPVn" name="FirstOrderAllPass.cpp" compile="1" resource="0"

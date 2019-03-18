@@ -18,10 +18,12 @@ class FirstOrderAllPass
 public:
 	FirstOrderAllPass(AudioProcessorValueTreeState& state);
 	~FirstOrderAllPass();
-	void prepare(const int& numChannels);
-	void process(AudioBuffer<float>& buffer);
+	void prepare(const int& numChannels, const int& filterNum);
+	void process(dsp::ProcessContextReplacing<float>& context);
 
 private:
 	AudioProcessorValueTreeState& mState;
 	std::vector<float> mXh;
+	int mFilterNum;
+	float mOldC = -.89;
 };
