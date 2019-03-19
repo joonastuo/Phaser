@@ -28,6 +28,11 @@ PhaserAudioProcessor::PhaserAudioProcessor()
 													 "Speed",
 													 0.0,
 													 100.0,
+													 0.0),
+			  std::make_unique<AudioParameterFloat>("wetness",
+													 "Wetness",
+													 0.0,
+													 100.0,
 													 0.0)
 		}),
 	mPhaser(mState)

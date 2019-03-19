@@ -15,8 +15,9 @@
 PhaserAudioProcessorEditor::PhaserAudioProcessorEditor (PhaserAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p), mState(p.getState())
 {
-    setSize (200, 200);
+    setSize (400, 200);
 
+	// SPEED =============================================
 	mSpeedLabel.setText("Speed", dontSendNotification);
 	mSpeedLabel.setSize(150, 20);
 	mSpeedLabel.setJustificationType(Justification::centred);
@@ -28,6 +29,19 @@ PhaserAudioProcessorEditor::PhaserAudioProcessorEditor (PhaserAudioProcessor& p)
 	mSpeedSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 20);
 	addAndMakeVisible(mSpeedSlider);
 	mSpeedSliderAttachment.reset(new SliderAttachment(mState, "speed", mSpeedSlider));
+
+	// WETNESS ===========================================
+	mWetLabel.setText("Wet", dontSendNotification);
+	mWetLabel.setSize(150, 20);
+	mWetLabel.setJustificationType(Justification::centred);
+	mWetLabel.setFont(20);
+	addAndMakeVisible(mWetLabel);
+
+	mWetSlider.setSliderStyle(Slider::SliderStyle::Rotary);
+	mWetSlider.setSize(100, 100);
+	mWetSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 20);
+	addAndMakeVisible(mWetSlider);
+	mWetSliderAttachment.reset(new SliderAttachment(mState, "wetness", mWetSlider));
 }
 
 PhaserAudioProcessorEditor::~PhaserAudioProcessorEditor()
@@ -41,9 +55,15 @@ void PhaserAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
 	auto area = getLocalBounds().reduced(10, 10);
+	auto leftSide = area.removeFromLeft(area.getWidth() / 2);
+
 	mSpeedLabel.setBounds(area.removeFromTop(20));
 	area.removeFromTop(20);
 	mSpeedSlider.setBounds(area.removeFromTop(100));
+
+	mWetLabel.setBounds(leftSide.removeFromTop(20));
+	leftSide.removeFromTop(20);
+	mWetSlider.setBounds(leftSide.removeFromTop(100));
 }
 
 void PhaserAudioProcessorEditor::resized()

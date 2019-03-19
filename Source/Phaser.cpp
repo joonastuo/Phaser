@@ -15,21 +15,7 @@
 Phaser::Phaser(AudioProcessorValueTreeState& state)
 	: mState(state)
 {
-	ValueTree APCoeffs("APCoeffs");
-	for (auto i = 0; i < mAPFilters.size(); ++i)
-	{
-		ValueTree APCoeff (static_cast<String> (i));
-
-		float coeffVal = 0.f;
-		if (i == 0 || i == 1 || i == 8 || i == 9)
-			coeffVal = -0.89f;
-		else
-			coeffVal = -0.49f;
-
-		APCoeff.setProperty(Identifier("coeff"), coeffVal, nullptr);
-		APCoeffs.addChild(APCoeff, -1, nullptr);
-	}
-	mState.state.addChild(APCoeffs, -1, nullptr);
+	// Empty constructor
 }
 
 Phaser::~Phaser()
@@ -42,7 +28,12 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 	mDCBlocker.prepare(spec.numChannels);
 	for (auto i = 0; i < mAPFilters.size(); ++i)
 	{
-		double coeff = mState.state.getChildWithName(Identifier("APCoeffs")).getChild(i).getProperty(Identifier("coeff"));
+		float coeff = 0.0f;
+		if (i == 0 || i == 1 || i == 8 || i == 9)
+			coeff = -0.89;
+		else
+			coeff = -0.49;
+
 		mAPFilters[i].prepare(spec.numChannels, i);
 		mAPFilters[i].updateCoefficients(coeff);
 	}
@@ -53,7 +44,8 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 
 void Phaser::process(AudioBuffer<float>& buffer)
 {
-	float W = .5f;
+	float wetnessPercentage = *mState.getRawParameterValue("wetness");
+	float W = .5f * (wetnessPercentage / 100);
 	float G = 1 - W;
 	float s = *mState.getRawParameterValue("speed");
 

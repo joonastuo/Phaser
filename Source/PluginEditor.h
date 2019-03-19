@@ -39,5 +39,10 @@ private:
 	Slider mSpeedSlider;
 	std::unique_ptr<SliderAttachment> mSpeedSliderAttachment;
 
+	// Wetness of effect
+	Label mWetLabel;
+	Slider mWetSlider;
+	std::unique_ptr<SliderAttachment> mWetSliderAttachment;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaserAudioProcessorEditor)
 };
