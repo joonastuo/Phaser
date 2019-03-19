@@ -30,6 +30,14 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     PhaserAudioProcessor& processor;
+	AudioProcessorValueTreeState& mState;
+
+	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+
+	// Speed of phaser LFO
+	Label mSpeedLabel;
+	Slider mSpeedSlider;
+	std::unique_ptr<SliderAttachment> mSpeedSliderAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaserAudioProcessorEditor)
 };

@@ -55,7 +55,7 @@ void Phaser::process(AudioBuffer<float>& buffer)
 {
 	float W = .5f;
 	float G = 1 - W;
-	float s = 50.f;
+	float s = *mState.getRawParameterValue("speed");
 
 	// LFO
 	float f_lfo = 0.069f * exp(0.04f * s);

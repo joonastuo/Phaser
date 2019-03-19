@@ -178,6 +178,11 @@ void PhaserAudioProcessor::setStateInformation (const void* data, int sizeInByte
     // whose contents will have been created by the getStateInformation() call.
 }
 
+AudioProcessorValueTreeState & PhaserAudioProcessor::getState()
+{
+	return mState;
+}
+
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
