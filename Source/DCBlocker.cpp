@@ -22,33 +22,24 @@ DCBlocker::~DCBlocker()
 
 void DCBlocker::prepare(const int& numChannels)
 {
-	for (auto channel = 0; channel < numChannels; ++channel)
-	{
-		mXh.push_back(std::vector<float> {0.f, 0.f});
-	}
+
 }
 
 void DCBlocker::process(dsp::ProcessContextReplacing<float>& context)
 {
 	dsp::AudioBlock<float> inputBlock = context.getInputBlock();
-	dsp::AudioBlock<float> outputBlock = context.getOutputBlock();
+	float inputValue = 0.f;
 
-	// Filter coefficients
-	const float p = 0.992f;
-	const float b0 = (1.f + p) / 2.f;
-	const float b2 = -1.f * b0;
-	const float a2 = p;
-
-	for (auto channel = 0; channel < inputBlock.getNumChannels(); ++channel)
+	for (auto channel = 0; channel < 2; ++channel)
 	{
-		const float* input = inputBlock.getChannelPointer(channel);
-		float* output = outputBlock.getChannelPointer(channel);
+		float* input = inputBlock.getChannelPointer(channel);
 
 		for (auto sample = 0; sample < inputBlock.getNumSamples(); ++sample)
 		{
-			output[sample] = b0 * input[sample] + mXh[channel][1];
+			inputValue = input[sample];
+			input[sample] = b0 * input[sample] + mXh[channel][1];
 			mXh[channel][1] = mXh[channel][0];
-			mXh[channel][0] = b2 * input[sample] + a2 * output[sample];
+			mXh[channel][0] = b2 * inputValue + a2 * input[sample];
 		}
 	}
 }

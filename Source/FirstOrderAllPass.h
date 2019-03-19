@@ -16,14 +16,15 @@
 class FirstOrderAllPass
 {
 public:
-	FirstOrderAllPass(AudioProcessorValueTreeState& state);
+	FirstOrderAllPass();
 	~FirstOrderAllPass();
 	void prepare(const int& numChannels, const int& filterNum);
 	void process(dsp::ProcessContextReplacing<float>& context);
+	void updateCoefficients(const float& c);
 
 private:
-	AudioProcessorValueTreeState& mState;
-	std::vector<float> mXh;
+	float mXh[2] = { 0.0 };
 	int mFilterNum;
+	float mC = -.89;
 	float mOldC = -.89;
 };

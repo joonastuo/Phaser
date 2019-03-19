@@ -23,5 +23,9 @@ public:
 private:
 
 	int mNumChannels = 2;
-	std::vector<std::vector<float>> mXh;
+	float mXh[2][2] = { 0.f };
+	const float p = 0.992f;
+	const float b0 = (1.f + p) / 2.f;
+	const float b2 = -1.f * b0;
+	const float a2 = p;
 };
