@@ -40,6 +40,12 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 	mSampleRate = spec.sampleRate;
 	mPhase = 0.f;
 	mDryBuffer.setSize(spec.numChannels, spec.maximumBlockSize);
+	mLFO.prepare(spec);
+	mLFO.setUnipolar(true);
+	mLFO.setWaveform(3);
+	mOlds = *mState.getRawParameterValue("speed");
+	float lfoFreq = 0.069f * exp(0.04f * mOlds);
+	mLFO.setFreq(lfoFreq);
 }
 
 void Phaser::process(AudioBuffer<float>& buffer)
@@ -50,16 +56,19 @@ void Phaser::process(AudioBuffer<float>& buffer)
 	float s = *mState.getRawParameterValue("speed");
 
 	// LFO
-	float f_lfo = 0.069f * exp(0.04f * s);
-	mPhase = mPhase + (static_cast<float>(buffer.getNumSamples()) / mSampleRate) * f_lfo * 2.f * M_PI;
-	float newCoeff = mDC + mA * abs(sin(2.f * M_PI * f_lfo + mPhase));
+	if (s != mOlds)
+	{
+		float lfoFreq = 0.069f * exp(0.04f * s);
+		mLFO.setFreq(lfoFreq);
+	}
+	mOlds = s;
+	float newCoeff = mDC + mA * mLFO.getValue();
+	mLFO.advanceBlock();
 
 	for (auto i = 2; i < 8; ++i)
 	{
 		mAPFilters[i].updateCoefficients(newCoeff);
 	}
-
-	mOldCoeff = newCoeff;
 
 	// DC Blocker
 	dsp::AudioBlock<float> block(buffer);

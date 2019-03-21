@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "FirstOrderAllPass.h"
 #include "DCBlocker.h"
+#include "LFO.h"
 
 class Phaser
 {
@@ -26,11 +27,13 @@ private:
 	AudioProcessorValueTreeState& mState;
 	DCBlocker mDCBlocker;
 	std::array<FirstOrderAllPass, 10> mAPFilters;
+	LFO mLFO;
 	AudioBuffer<float> mDryBuffer;
-	float mAPCoeff = -.49f;
+	float mAPCoeff = -.84f;
 	float mSampleRate = 44100.f;
 	float mPhase = 0.f;
-	float mOldCoeff = 0.0;
-	float mA = 0.77 + 0.49;
-	float mDC = -0.49;
+	float mOlds = 0.f;
+
+	float mA = 0.45;
+	float mDC = -0.84;
 };

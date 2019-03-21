@@ -20,6 +20,8 @@
               file="Source/FirstOrderAllPass.cpp"/>
         <FILE id="L9JkE5" name="FirstOrderAllPass.h" compile="0" resource="0"
               file="Source/FirstOrderAllPass.h"/>
+        <FILE id="wxH4az" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
+        <FILE id="ZqVf6R" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
       </GROUP>
     </GROUP>
   </MAINGROUP>
