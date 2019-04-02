@@ -11,7 +11,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Phaser.h"
+#include "AudioDSP/Phaser.h"
+#include "Helper/Identifiers.h"
 
 //==============================================================================
 /**
