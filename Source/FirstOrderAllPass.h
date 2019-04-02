@@ -20,6 +20,7 @@ public:
 	~FirstOrderAllPass();
 	void prepare(const int& numChannels, const int& filterNum);
 	void process(dsp::ProcessContextReplacing<float>& context);
+	float processSample(const float& sample, const int& channel);
 	void updateCoefficients(const float& c);
 
 private:

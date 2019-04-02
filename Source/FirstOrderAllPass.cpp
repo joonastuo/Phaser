@@ -44,6 +44,19 @@ void FirstOrderAllPass::process(dsp::ProcessContextReplacing<float>& context)
 	}
 }
 
+float FirstOrderAllPass::processSample(const float & input, const int & channel)
+{
+	//float output = 0.f;
+	//float xh = input - mC * mXh[channel];
+	//output = mC * xh + mXh[channel];
+	//mXh[channel] = xh;
+	//return output;
+
+	float output = mC * input + mXh[channel];
+	mXh[channel] = input - mC * output;
+	return output;
+}
+
 void FirstOrderAllPass::updateCoefficients(const float& c)
 {
 	mC = c;

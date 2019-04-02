@@ -24,15 +24,20 @@ PhaserAudioProcessor::PhaserAudioProcessor()
                        ),
 	mState(*this, nullptr, Identifier("PhaserPlugin"),
 		{
-			  std::make_unique<AudioParameterFloat>("speed",
+			  std::make_unique<AudioParameterFloat>(IDs::speed,
 													 "Speed",
 													 0.0,
 													 100.0,
-													 0.0),
-			  std::make_unique<AudioParameterFloat>("wetness",
+													 40.0),
+			  std::make_unique<AudioParameterFloat>(IDs::wetness,
 													 "Wetness",
 													 0.0,
 													 100.0,
+													 100.0),
+			  std::make_unique<AudioParameterFloat>(IDs::feedback,
+													 "Feedback",
+													 -99.0,
+													 99.0,
 													 0.0)
 		}),
 	mPhaser(mState)

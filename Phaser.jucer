@@ -23,6 +23,13 @@
         <FILE id="wxH4az" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
         <FILE id="ZqVf6R" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
       </GROUP>
+      <GROUP id="{F1335F90-1FDD-0365-C5C9-64B731EFC3A7}" name="LookAndFeel">
+        <FILE id="VZIQHH" name="KnobLookAndFeel.h" compile="0" resource="0"
+              file="Source/KnobLookAndFeel.h"/>
+      </GROUP>
+      <GROUP id="{67191F4C-A431-C308-074D-C2CA7C580235}" name="Helper">
+        <FILE id="RzEmDT" name="Identifiers.h" compile="0" resource="0" file="Source/Identifiers.h"/>
+      </GROUP>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

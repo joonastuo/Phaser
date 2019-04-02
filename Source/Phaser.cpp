@@ -50,10 +50,13 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 
 void Phaser::process(AudioBuffer<float>& buffer)
 {
-	float wetnessPercentage = *mState.getRawParameterValue("wetness");
+	float wetnessPercentage = *mState.getRawParameterValue(IDs::wetness);
+	float s = *mState.getRawParameterValue(IDs::speed);
+	float feedback = *mState.getRawParameterValue(IDs::feedback);
+
 	float W = .5f * (wetnessPercentage / 100);
 	float G = 1 - W;
-	float s = *mState.getRawParameterValue("speed");
+	float FB = feedback / 100.f;
 
 	// LFO
 	if (s != mOlds)
@@ -81,9 +84,29 @@ void Phaser::process(AudioBuffer<float>& buffer)
 	}
 
 	// Allpass filters
-	for (auto i = 0; i < mAPFilters.size(); ++i)
+	//for (auto i = 0; i < mAPFilters.size(); ++i)
+	//{
+	//	mAPFilters[i].process(dsp::ProcessContextReplacing<float> (block));
+	//}
+
+	for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
 	{
-		mAPFilters[i].process(dsp::ProcessContextReplacing<float> (block));
+		const float* input = buffer.getReadPointer(channel);
+		float* output = buffer.getWritePointer(channel);
+
+		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
+		{
+			float outputSample = 0.f;
+			float inputSample = input[sample] + mFeedback[channel] * FB;
+
+			for (auto i = 0; i < mAPFilters.size(); ++i)
+			{
+				outputSample = mAPFilters[i].processSample(inputSample, channel);
+				inputSample = outputSample;
+			}
+			output[sample] = outputSample;
+			mFeedback[channel] = outputSample;
+		}
 	}
 
 	// Apply W

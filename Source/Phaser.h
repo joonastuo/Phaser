@@ -14,6 +14,7 @@
 #include "FirstOrderAllPass.h"
 #include "DCBlocker.h"
 #include "LFO.h"
+#include "Identifiers.h"
 
 class Phaser
 {
@@ -36,4 +37,6 @@ private:
 
 	float mA = 0.45;
 	float mDC = -0.84;
+
+	float mFeedback[2] = { 0.f };
 };
