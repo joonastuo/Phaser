@@ -35,12 +35,12 @@ void PhaserAudioProcessorEditor::paint (Graphics& g)
 
 	auto area = getLocalBounds().reduced(mWindowMarginWidth / 2.f, mWindowMarginHeight / 2.f);
 	// Draw title
-	auto titleArea = area.removeFromTop(mTitleHeight);
+	auto titleArea = area.removeFromBottom(mTitleHeight);
 	drawTitle(g, titleArea.toFloat());
 	// Draw parameter area
-	area.removeFromTop(10.f);
-	g.setColour(backgroundColour.darker(.8));
-	g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
+	//area.removeFromBottom(10.f);
+	//g.setColour(backgroundColour.darker(.8));
+	//g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
 }
 
 void PhaserAudioProcessorEditor::resized()
@@ -104,7 +104,7 @@ void PhaserAudioProcessorEditor::resized()
 
 	auto area = getLocalBounds();
 	area = area.reduced(mWindowMarginWidth, mWindowMarginHeight);
-	area.removeFromTop(mTitleHeight + 10.f);
+	area.removeFromBottom(mTitleHeight + 10.f);
 	masterBox.performLayout(area.toFloat());
 }
 
@@ -160,7 +160,7 @@ void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 {
 	Colour bgColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
 	g.setColour(bgColour.darker(.8f));
-	g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
+	//g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
 
 	Path textPath;
 	GlyphArrangement glyphs;
@@ -172,22 +172,22 @@ void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 	g.setColour(Colours::white);
 	float startX = area.getTopLeft().getX() + 4.f;
 	float endX = area.getTopRight().getX() - 4.f;
-	for (auto i = 1; i < 4; ++i)
-	{
-		g.drawLine(startX, y + 10.f * i, endX, y + 10.f * i, 2.f);
-	}
+	//for (auto i = 1; i < 4; ++i)
+	//{
+	//	g.drawLine(startX, y + 10.f * i, endX, y + 10.f * i, 2.f);
+	//}
 
 	glyphs.addFittedText(mTitleFont, mTitleText, x, y, w, h, Justification::centred, 1);
 	glyphs.createPath(textPath);
 
-	g.setColour(bgColour);
-	auto textBounds = textPath.getBounds().expanded(10.f, 0.f);
-	g.fillRoundedRectangle(textBounds.toFloat(), 10.f);
+	g.setColour(bgColour.darker(.4));
+	auto textBounds = textPath.getBounds().expanded(10.f, 10.f);
+	g.fillRoundedRectangle(textBounds.toFloat(), 18.f);
 
 	g.setColour(juce::Colours::white);
 	juce::PathStrokeType strokeType(2.5f);
-	g.strokePath(textPath, strokeType);
-	g.setColour(juce::Colours::black);
+	//g.strokePath(textPath, strokeType);
+	//g.setColour(juce::Colours::black);
 	g.fillPath(textPath);
 }
 

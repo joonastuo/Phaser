@@ -58,7 +58,7 @@ public:
 		String text = label.getText();
 		int width = label.getWidth();
 		int height = label.getHeight();
-		g.setFont(Font("Roboto", height, Font::plain));
+		g.setFont(Font(height, Font::plain));
 		g.drawFittedText(text, 0, 0, width, height, Justification::centred, 1);
 	}
 };

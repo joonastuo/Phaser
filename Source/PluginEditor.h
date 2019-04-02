@@ -46,13 +46,13 @@ private:
 	const int mLabelWidht = mSliderWidth;
 	const int mWindowMarginWidth = 20;
 	const int mWindowMarginHeight = 20;
-	const int mSpaceBetweenW = 40;
-	const int mSpaceBetweenH = 60;
+	const int mSpaceBetweenW = 20;
+	const int mSpaceBetweenH = 20;
 	const int mTitleHeight = 40;
 	// Label font
-	Font mLabelFont = Font("Roboto", mLabelHeight, Font::plain);
+	Font mLabelFont = Font(mLabelHeight, Font::plain);
 	String mTitleText = "Phaser";
-	Font mTitleFont = Font("Pacifico", 40.f, Font::plain);
+	Font mTitleFont = Font(30.f, Font::plain);
 	Slider::SliderStyle mSliderStyle = Slider::SliderStyle::Rotary;
 	KnobLookAndFeel mKnobLookAndFeel;
 
