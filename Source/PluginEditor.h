@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "Helper/Identifiers.h"
+#include "LookAndFeel/KnobLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -29,6 +30,7 @@ public:
 	void initialiseGUI();
 
 private:
+	void drawTitle(Graphics& g, Rectangle<float> area);
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     PhaserAudioProcessor& processor;
@@ -44,11 +46,15 @@ private:
 	const int mLabelWidht = mSliderWidth;
 	const int mWindowMarginWidth = 20;
 	const int mWindowMarginHeight = 20;
-	const int mSpaceBetweenW = 100;
+	const int mSpaceBetweenW = 40;
 	const int mSpaceBetweenH = 60;
+	const int mTitleHeight = 40;
 	// Label font
 	Font mLabelFont = Font("Roboto", mLabelHeight, Font::plain);
+	String mTitleText = "Phaser";
+	Font mTitleFont = Font("Pacifico", 40.f, Font::plain);
 	Slider::SliderStyle mSliderStyle = Slider::SliderStyle::Rotary;
+	KnobLookAndFeel mKnobLookAndFeel;
 
 	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 

@@ -15,8 +15,8 @@
 PhaserAudioProcessorEditor::PhaserAudioProcessorEditor (PhaserAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p), mState(p.getState())
 {
-	int windowWidth = 2 * mWindowMarginWidth + 3 * jmax(mSliderWidth, mLabelWidht) + mSpaceBetweenW;
-	int windowHeight = 2 * mWindowMarginHeight + (mLabelHeight + mSliderHeight) + mSpaceBetweenH;
+	int windowWidth  = 2 * mWindowMarginWidth  + 2 * jmax(mSliderWidth, mLabelWidht) + mSpaceBetweenW;
+	int windowHeight = 2 * mWindowMarginHeight + 2 * (mLabelHeight + mSliderHeight)  + mSpaceBetweenH + mTitleHeight;
 	setSize(windowWidth, windowHeight);
 	initialiseGUI();
 }
@@ -32,25 +32,15 @@ void PhaserAudioProcessorEditor::paint (Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
 	Colour backgroundColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
     g.fillAll (backgroundColour);
-	auto area = getLocalBounds().reduced(mWindowMarginWidth, mWindowMarginHeight);
-	float width = area.getWidth();
-	float height = area.getHeight();
 
+	auto area = getLocalBounds().reduced(mWindowMarginWidth / 2.f, mWindowMarginHeight / 2.f);
+	// Draw title
+	auto titleArea = area.removeFromTop(mTitleHeight);
+	drawTitle(g, titleArea.toFloat());
+	// Draw parameter area
+	area.removeFromTop(10.f);
 	g.setColour(backgroundColour.darker(.8));
-	g.drawRoundedRectangle(mWindowMarginWidth, mWindowMarginHeight, width, 40, 10.f, 3.f);
-	g.setColour(Colours::white);
-	g.setFont(Font("Pacifico", 40.f, Font::plain));
-	g.drawFittedText("Phaser", getWidth() / 2 - 50.f, mWindowMarginHeight, 100.f, 40.f, Justification::centred, 1);
-	//g.drawLine(24.f, 30.f, 116.f, 30.f, 2.f);
-	//g.drawLine(148.f, 30.f, 270.f, 30.f, 2.f);
-
-	//g.drawLine(24.f, 40.f, 112.f, 40.f, 2.f);
-	//g.drawLine(190.f, 40.f, 270.f, 40.f, 2.f);
-
-	//g.drawLine(24.f, 50.f, 114.f, 50.f, 2.f);
-	//g.drawLine(190.f, 50.f, 270.f, 50.f, 2.f);
-
-	//g.drawRoundedRectangle(20, 50, width, 120, 10.f, 2.f);
+	g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
 }
 
 void PhaserAudioProcessorEditor::resized()
@@ -88,33 +78,40 @@ void PhaserAudioProcessorEditor::resized()
 			FlexItem(mFeedbackSlider).withWidth(mSliderWidth).withHeight(mSliderHeight)
 		});
 
+	FlexBox firstRowBox;
+	firstRowBox.alignContent = FlexBox::AlignContent::center;
+	firstRowBox.justifyContent = FlexBox::JustifyContent::spaceBetween;
+	firstRowBox.flexDirection = FlexBox::Direction::row;
+	firstRowBox.items.addArray(
+		{
+			FlexItem(speedBox) .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight),
+			FlexItem(fbBox)	   .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight)
+		});
+
 	// MASTER ======================
-	int masterItemWidth = jmax(mSliderWidth, mLabelWidht);
-	int masterItemHeight = mSliderHeight + mLabelHeight;
-	int itemSpaceW = mSpaceBetweenW / 3.f;
+	float masterItemWidth = (2 * jmax(mSliderWidth, mLabelWidht)) + mSpaceBetweenW;
+	float masterItemHeight = mSliderHeight + mLabelHeight + mSpaceBetweenH / 2.f;
 
 	FlexBox masterBox;
 	masterBox.alignContent = FlexBox::AlignContent::spaceBetween;
 	masterBox.justifyContent = FlexBox::JustifyContent::spaceBetween;
-	masterBox.flexDirection = FlexBox::Direction::row;
+	masterBox.flexDirection = FlexBox::Direction::column;
 	masterBox.items.addArray(
 		{
-			FlexItem(mixBox).withWidth(masterItemWidth + itemSpaceW).withHeight(masterItemHeight + mSpaceBetweenH),
-			FlexItem(speedBox).withWidth(masterItemWidth + itemSpaceW).withHeight(masterItemHeight + mSpaceBetweenH),
-			FlexItem(fbBox).withWidth(masterItemWidth + itemSpaceW).withHeight(masterItemHeight + mSpaceBetweenH),
+			FlexItem(firstRowBox).withWidth(masterItemWidth).withHeight(masterItemHeight),
+			FlexItem(mixBox)	 .withWidth(masterItemWidth).withHeight(masterItemHeight)
 		});
 
 	auto area = getLocalBounds();
-	area.removeFromTop(40.f);
-	area.removeFromBottom(20.f);
 	area = area.reduced(mWindowMarginWidth, mWindowMarginHeight);
+	area.removeFromTop(mTitleHeight + 10.f);
 	masterBox.performLayout(area.toFloat());
 }
 
 void PhaserAudioProcessorEditor::initialiseGUI()
 {
 	// SPEED =============================================
-	mSpeedLabel.setText("Speed", dontSendNotification);
+	mSpeedLabel.setText("LFO Freq", dontSendNotification);
 	mSpeedLabel.setSize(mLabelWidht, mLabelHeight);
 	mSpeedLabel.setJustificationType(Justification::centred);
 	mSpeedLabel.setFont(mLabelFont);
@@ -123,6 +120,8 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 	mSpeedSlider.setSliderStyle(mSliderStyle);
 	mSpeedSlider.setSize(mSliderWidth, mSliderHeight);
 	mSpeedSlider.setTextBoxStyle(Slider::TextBoxBelow, true, mTextBoxWidth, mTextBoxHeight);
+	mSpeedSlider.setLookAndFeel(&mKnobLookAndFeel);
+	mSpeedSlider.setTextValueSuffix(" Hz");
 	addAndMakeVisible(mSpeedSlider);
 	mSpeedSliderAttachment.reset(new SliderAttachment(mState, IDs::speed, mSpeedSlider));
 
@@ -136,6 +135,8 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 	mMixSlider.setSliderStyle(mSliderStyle);
 	mMixSlider.setSize(mSliderWidth, mSliderHeight);
 	mMixSlider.setTextBoxStyle(Slider::TextBoxBelow, true, mTextBoxWidth, mTextBoxHeight);
+	mMixSlider.setLookAndFeel(&mKnobLookAndFeel);
+	mMixSlider.setTextValueSuffix(" %");
 	addAndMakeVisible(mMixSlider);
 	mWetSliderAttachment.reset(new SliderAttachment(mState, IDs::wetness, mMixSlider));
 
@@ -149,6 +150,44 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 	mFeedbackSlider.setSliderStyle(mSliderStyle);
 	mFeedbackSlider.setSize(mSliderWidth, mSliderHeight);
 	mFeedbackSlider.setTextBoxStyle(Slider::TextBoxBelow, true, mTextBoxWidth, mTextBoxHeight);
+	mFeedbackSlider.setLookAndFeel(&mKnobLookAndFeel);
+	mFeedbackSlider.setTextValueSuffix(" %");
 	addAndMakeVisible(mFeedbackSlider);
 	mFeedbackSliderAttachment.reset(new SliderAttachment(mState, IDs::feedback, mFeedbackSlider));
 }
+
+void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
+{
+	Colour bgColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
+	g.setColour(bgColour.darker(.8f));
+	g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
+
+	Path textPath;
+	GlyphArrangement glyphs;
+	float x = area.getX(); ;
+	float y = area.getY();
+	float w = area.getWidth();
+	float h = area.getHeight();
+
+	g.setColour(Colours::white);
+	float startX = area.getTopLeft().getX() + 4.f;
+	float endX = area.getTopRight().getX() - 4.f;
+	for (auto i = 1; i < 4; ++i)
+	{
+		g.drawLine(startX, y + 10.f * i, endX, y + 10.f * i, 2.f);
+	}
+
+	glyphs.addFittedText(mTitleFont, mTitleText, x, y, w, h, Justification::centred, 1);
+	glyphs.createPath(textPath);
+
+	g.setColour(bgColour);
+	auto textBounds = textPath.getBounds().expanded(10.f, 0.f);
+	g.fillRoundedRectangle(textBounds.toFloat(), 10.f);
+
+	g.setColour(juce::Colours::white);
+	juce::PathStrokeType strokeType(2.5f);
+	g.strokePath(textPath, strokeType);
+	g.setColour(juce::Colours::black);
+	g.fillPath(textPath);
+}
+
