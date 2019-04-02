@@ -12,17 +12,20 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+//==============================================================================
 Phaser::Phaser(AudioProcessorValueTreeState& state)
 	: mState(state)
 {
 	// Empty constructor
 }
 
+//==============================================================================
 Phaser::~Phaser()
 {
 	// Empty destructor
 }
 
+//==============================================================================
 void Phaser::prepare(dsp::ProcessSpec& spec)
 {
 	mDCBlocker.prepare(spec.numChannels);
@@ -48,15 +51,14 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 	mLFO.setFreq(lfoFreq);
 }
 
+//==============================================================================
 void Phaser::process(AudioBuffer<float>& buffer)
 {
-	float wetnessPercentage = *mState.getRawParameterValue(IDs::wetness);
+	float W  = getWetness();
+	float G  = 1 - W;
+	float FB = getFeedback();
 	float s = *mState.getRawParameterValue(IDs::speed);
-	float feedback = *mState.getRawParameterValue(IDs::feedback);
-
-	float W = .5f * (wetnessPercentage / 100);
-	float G = 1 - W;
-	float FB = feedback / 100.f;
+	float lfoFreq = 0.069f * exp(0.04f * s);
 
 	// LFO
 	if (s != mOlds)
@@ -116,4 +118,23 @@ void Phaser::process(AudioBuffer<float>& buffer)
 	{
 		buffer.addFromWithRamp(channel, 0, mDryBuffer.getReadPointer(channel), mDryBuffer.getNumSamples(), G, G);
 	}
+}
+
+//==============================================================================
+float Phaser::getWetness()
+{
+	return *mState.getRawParameterValue(IDs::wetness);
+}
+
+//==============================================================================
+float Phaser::getFeedback()
+{
+	return *mState.getRawParameterValue(IDs::feedback);
+}
+
+//==============================================================================
+float Phaser::getLfoFreq()
+{
+	float s = *mState.getRawParameterValue(IDs::speed);
+	return 0.069f * exp(0.04f * s);
 }

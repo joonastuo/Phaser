@@ -25,20 +25,32 @@ PhaserAudioProcessor::PhaserAudioProcessor()
 	mState(*this, nullptr, Identifier("PhaserPlugin"),
 		{
 			  std::make_unique<AudioParameterFloat>(IDs::speed,
-													 "Speed",
-													 0.0,
-													 100.0,
-													 40.0),
+													"Speed",
+													NormalisableRange<float> (0.0, 100.0),
+												    40.0,
+													String(),
+												    AudioProcessorParameter::genericParameter,
+												    [](float value, int maxStringLength) {return static_cast<String>(round(0.069f * exp(0.04f * value) * 100.f) / 100.f); },
+												    [](const String& text) {return log(100.f * text.getFloatValue()) / 0.04f; }
+													 ),
 			  std::make_unique<AudioParameterFloat>(IDs::wetness,
-													 "Wetness",
-													 0.0,
-													 100.0,
-													 100.0),
+													"Wetness",
+													NormalisableRange<float> (0.00, 0.5),
+												    0.5,
+												    String(),
+												    AudioProcessorParameter::genericParameter,
+												    [](float value, int maxStringLength) {return static_cast<String>(round((value * 2) * 100.f * 100.f) / 100.f); },
+												    [](const String& text) {return round(((text.getFloatValue() / 2.f) / 100.f) * 100.f) / 100.f; }
+													),
 			  std::make_unique<AudioParameterFloat>(IDs::feedback,
-													 "Feedback",
-													 -99.0,
-													 99.0,
-													 0.0)
+													"Feedback",
+													NormalisableRange<float>(-0.99, 0.99),
+												    0.0,
+												    String(),
+												    AudioProcessorParameter::genericParameter,
+												    [](float value, int maxStringLength) {return static_cast<String>(round(value * 100.f * 100.f) / 100.f); },
+												    [](const String& text) {return round((text.getFloatValue() / 100.f) * 100.f) / 100.f; }
+													)
 		}),
 	mPhaser(mState)
 #endif

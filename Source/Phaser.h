@@ -25,6 +25,10 @@ public:
 	void process(AudioBuffer<float>& buffer);
 
 private:
+	float getWetness();
+	float getFeedback();
+	float getLfoFreq();
+
 	AudioProcessorValueTreeState& mState;
 	DCBlocker mDCBlocker;
 	std::array<FirstOrderAllPass, 10> mAPFilters;
