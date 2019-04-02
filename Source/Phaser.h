@@ -36,8 +36,6 @@ private:
 	AudioBuffer<float> mDryBuffer;
 	float mAPCoeff = -.84f;
 	float mSampleRate = 44100.f;
-	float mPhase = 0.f;
-	float mOlds = 0.f;
 
 	float mA = 0.45;
 	float mDC = -0.84;

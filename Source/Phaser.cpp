@@ -28,7 +28,14 @@ Phaser::~Phaser()
 //==============================================================================
 void Phaser::prepare(dsp::ProcessSpec& spec)
 {
+	// Prepare class members
+	mSampleRate = spec.sampleRate;
+	mDryBuffer.setSize(spec.numChannels, spec.maximumBlockSize);
+
+	// Prepare DCBlocker
 	mDCBlocker.prepare(spec.numChannels);
+
+	// Prepare AP filters
 	for (auto i = 0; i < mAPFilters.size(); ++i)
 	{
 		float coeff = 0.0f;
@@ -40,33 +47,26 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 		mAPFilters[i].prepare(spec.numChannels, i);
 		mAPFilters[i].updateCoefficients(coeff);
 	}
-	mSampleRate = spec.sampleRate;
-	mPhase = 0.f;
-	mDryBuffer.setSize(spec.numChannels, spec.maximumBlockSize);
+
+	// Prepare LFO
 	mLFO.prepare(spec);
 	mLFO.setUnipolar(true);
 	mLFO.setWaveform(3);
-	mOlds = *mState.getRawParameterValue("speed");
-	float lfoFreq = 0.069f * exp(0.04f * mOlds);
+	float lfoFreq = getLfoFreq();
 	mLFO.setFreq(lfoFreq);
 }
 
 //==============================================================================
 void Phaser::process(AudioBuffer<float>& buffer)
 {
+	// Gains
 	float W  = getWetness();
 	float G  = 1 - W;
 	float FB = getFeedback();
-	float s = *mState.getRawParameterValue(IDs::speed);
-	float lfoFreq = 0.069f * exp(0.04f * s);
-
 	// LFO
-	if (s != mOlds)
-	{
-		float lfoFreq = 0.069f * exp(0.04f * s);
-		mLFO.setFreq(lfoFreq);
-	}
-	mOlds = s;
+	float lfoFreq = getLfoFreq();
+	mLFO.setFreq(lfoFreq);
+
 	float newCoeff = mDC + mA * mLFO.getValue();
 	mLFO.advanceBlock();
 
@@ -75,22 +75,17 @@ void Phaser::process(AudioBuffer<float>& buffer)
 		mAPFilters[i].updateCoefficients(newCoeff);
 	}
 
-	// DC Blocker
+	// DC Blocker ============================
 	dsp::AudioBlock<float> block(buffer);
 	mDCBlocker.process(dsp::ProcessContextReplacing<float> (block));
 
-	// Copy current buffer to dry buffer
+	// Copy current buffer to dry buffer =====
 	for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
 	{
 		mDryBuffer.copyFrom(channel, 0, buffer.getReadPointer(channel), buffer.getNumSamples());
 	}
 
-	// Allpass filters
-	//for (auto i = 0; i < mAPFilters.size(); ++i)
-	//{
-	//	mAPFilters[i].process(dsp::ProcessContextReplacing<float> (block));
-	//}
-
+	// AP Filters ============================
 	for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
 	{
 		const float* input = buffer.getReadPointer(channel);
@@ -111,9 +106,8 @@ void Phaser::process(AudioBuffer<float>& buffer)
 		}
 	}
 
-	// Apply W
+	// Dry / wet ============================
 	buffer.applyGain(W);
-
 	for (auto channel = 0; channel < buffer.getNumChannels(); ++channel)
 	{
 		buffer.addFromWithRamp(channel, 0, mDryBuffer.getReadPointer(channel), mDryBuffer.getNumSamples(), G, G);
