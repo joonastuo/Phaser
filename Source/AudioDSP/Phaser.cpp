@@ -71,13 +71,27 @@ void Phaser::process(AudioBuffer<float>& buffer)
 	float W  = getWetness();
 	float G  = 1 - W;
 	float FB = getFeedback();
+	bool lfoWaveform = getLFOWaveform();
 	// LFO
 	float lfoFreq = getLfoFreq();
 	mLFO.setFreq(lfoFreq);
 
-	float fc = mFcMinTri + mTriA * mLFO.getValue();
-	float newCoeff = calcCoeff(fc);
-	mLFO.advanceBlock();
+	float newCoeff = 0.f;
+	if (lfoWaveform)
+	{
+		mLFO.setWaveform(1);
+		float lfoValue = mLFO.getValue();
+		float fc = mFcMinSin + mSinA * mLFO.getValue();
+		mLFO.advanceBlock();
+		newCoeff = calcCoeff(fc);
+	}
+	else
+	{
+		mLFO.setWaveform(Waveforms::tri);
+		float fc = mFcMinTri + mTriA * mLFO.getValue();
+		mLFO.advanceBlock();
+		newCoeff = calcCoeff(fc);
+	}
 
 	for (auto i = 2; i < 8; ++i)
 	{
@@ -142,8 +156,13 @@ float Phaser::getLfoFreq()
 	return 0.069f * exp(0.04f * s);
 }
 
+bool Phaser::getLFOWaveform()
+{
+	return *mState.getRawParameterValue(IDs::lfoWaveform);
+}
+
 //==============================================================================
 float Phaser::calcCoeff(const float & fc)
 {
-	return (tan(M_PI * fc / mSampleRate) - 1) / (tan(M_PI * fc / mSampleRate) + 1);
+	return -1.f * (1.f - tan(2.f * M_PI * fc * ((1.f / mSampleRate) / 2.f))) / (1.f + tan(2.f * M_PI * fc * ((1.f / mSampleRate) / 2.f)));
 }

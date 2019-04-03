@@ -15,6 +15,15 @@
 //==============================================================================
 /*
 */
+enum Waveforms
+{
+	sine,
+	rectSine,
+	saw,
+	tri, 
+	square
+};
+	
 class LFO
 {
 public:
@@ -28,15 +37,6 @@ public:
 	void advanceSamples(const int& numSamples);
 	void advanceBlock();
 	float linearInterp(const float& y0, const float& yp1, const float& frac);
-
-	enum Waveforms
-	{
-		sine,
-		rectSine,
-		saw,
-		tri, 
-		square
-	};
 
 private:
 	float mReadIndex = 0.f;

@@ -29,6 +29,7 @@ private:
 	float getWetness();
 	float getFeedback();
 	float getLfoFreq();
+	bool getLFOWaveform();
 	float calcCoeff(const float& fc);
 
 	// Private variables
