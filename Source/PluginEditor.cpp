@@ -148,7 +148,7 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 
 	mSpeedSlider.setSliderStyle(mSliderStyle);
 	mSpeedSlider.setSize(mSliderWidth, mSliderHeight);
-	mSpeedSlider.setTextBoxStyle(Slider::TextBoxBelow, true, mTextBoxWidth, mTextBoxHeight);
+	mSpeedSlider.setTextBoxStyle(Slider::TextBoxBelow, false, mTextBoxWidth, mTextBoxHeight);
 	mSpeedSlider.setLookAndFeel(&mKnobLookAndFeel);
 	mSpeedSlider.setTextValueSuffix(" Hz");
 	addAndMakeVisible(mSpeedSlider);
@@ -163,7 +163,7 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 
 	mMixSlider.setSliderStyle(mSliderStyle);
 	mMixSlider.setSize(mSliderWidth, mSliderHeight);
-	mMixSlider.setTextBoxStyle(Slider::TextBoxBelow, true, mTextBoxWidth, mTextBoxHeight);
+	mMixSlider.setTextBoxStyle(Slider::TextBoxBelow, false, mTextBoxWidth, mTextBoxHeight);
 	mMixSlider.setLookAndFeel(&mKnobLookAndFeel);
 	mMixSlider.setTextValueSuffix(" %");
 	addAndMakeVisible(mMixSlider);
@@ -178,7 +178,7 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 
 	mFeedbackSlider.setSliderStyle(mSliderStyle);
 	mFeedbackSlider.setSize(mSliderWidth, mSliderHeight);
-	mFeedbackSlider.setTextBoxStyle(Slider::TextBoxBelow, true, mTextBoxWidth, mTextBoxHeight);
+	mFeedbackSlider.setTextBoxStyle(Slider::TextBoxBelow, false, mTextBoxWidth, mTextBoxHeight);
 	mFeedbackSlider.setLookAndFeel(&mKnobLookAndFeel);
 	mFeedbackSlider.setTextValueSuffix(" %");
 	addAndMakeVisible(mFeedbackSlider);
