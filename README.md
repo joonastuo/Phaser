@@ -4,7 +4,7 @@ Phaser-effect plugin made with JUCE. The phaser is a gray box model of the Frame
 - LFO freq: The frequency of the LFO modulating the phase response of the allpass filters
 - Feedback: The gain of the allpass-filter feedback path.
 - Mix: The ratio between the wet and dry signal.
-- Intensity: OFF = full-wave rectified sinewave, ON = triangular waveform.
+- Intense: OFF = full-wave rectified sinewave, ON = triangular waveform.
 
 <p align="left">
 		<img src="Images/phaserScreenshot.PNG" width="200">
