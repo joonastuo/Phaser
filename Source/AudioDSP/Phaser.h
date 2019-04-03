@@ -30,12 +30,14 @@ private:
 	float getFeedback();
 	float getLfoFreq();
 	bool getLFOWaveform();
+	float getCoeff(const int& channel);
 	float calcCoeff(const float& fc);
 
 	// Private variables
 	AudioProcessorValueTreeState& mState;
 	DCBlocker mDCBlocker;
 	std::array<FirstOrderAllPass, 10> mAPFilters;
+	std::array<LFO, 2> mLFOs;
 	LFO mLFO;
 	AudioBuffer<float> mDryBuffer;
 	float mSampleRate = 44100.f;

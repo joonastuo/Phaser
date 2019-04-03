@@ -44,7 +44,7 @@ LFO::LFO()
 	{
 		// Sin
 		mSinArray[i] = sin((static_cast<float> (i) / 1024.f) * (2 * M_PI));
-		mRectSinArray[i] = 2 * abs(mSinArray[i]) - 1;
+		mRectSinArray[i] = 2 * sin((static_cast<float> (i) / 1024.f) * M_PI) - 1;
 
 		// Triangle
 		if (i < 256)

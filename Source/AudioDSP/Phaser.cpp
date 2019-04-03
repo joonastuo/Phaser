@@ -35,12 +35,16 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 	// Prepare DCBlocker
 	mDCBlocker.prepare(spec.numChannels);
 
-	// Prepare LFO
-	mLFO.prepare(spec);
-	mLFO.setUnipolar(true);
-	mLFO.setWaveform(3);
-	float lfoFreq = getLfoFreq();
-	mLFO.setFreq(lfoFreq);
+	// Prepare LFOs
+	int lfoWaveform = getLFOWaveform() ? Waveforms::tri : Waveforms::rectSine;
+
+	for (auto& lfo : mLFOs)
+	{
+		lfo.prepare(spec);
+		lfo.setUnipolar(true);
+		lfo.setWaveform(lfoWaveform);
+		lfo.setFreq(getLfoFreq());
+	}
 
 	// Prepare AP filters
 	// Coefficient for A1, A2, A9 and A10
@@ -71,32 +75,6 @@ void Phaser::process(AudioBuffer<float>& buffer)
 	float W  = getWetness();
 	float G  = 1 - W;
 	float FB = getFeedback();
-	bool lfoWaveform = getLFOWaveform();
-	// LFO
-	float lfoFreq = getLfoFreq();
-	mLFO.setFreq(lfoFreq);
-
-	float newCoeff = 0.f;
-	if (lfoWaveform)
-	{
-		mLFO.setWaveform(1);
-		float lfoValue = mLFO.getValue();
-		float fc = mFcMinSin + mSinA * mLFO.getValue();
-		mLFO.advanceBlock();
-		newCoeff = calcCoeff(fc);
-	}
-	else
-	{
-		mLFO.setWaveform(Waveforms::tri);
-		float fc = mFcMinTri + mTriA * mLFO.getValue();
-		mLFO.advanceBlock();
-		newCoeff = calcCoeff(fc);
-	}
-
-	for (auto i = 2; i < 8; ++i)
-	{
-		mAPFilters[i].updateCoefficients(newCoeff);
-	}
 
 	// DC Blocker ============================
 	dsp::AudioBlock<float> block(buffer);
@@ -119,6 +97,13 @@ void Phaser::process(AudioBuffer<float>& buffer)
 			float outputSample = 0.f;
 			float inputSample = input[sample] + mFeedback[channel] * FB;
 
+			// Update mod AP filter coefficients
+			float coeff = getCoeff(channel);
+			for (auto i = 2; i < 8; ++i)
+			{
+				mAPFilters[i].updateCoefficients(coeff);
+			}
+			// Process sample trough AP filters
 			for (auto i = 0; i < mAPFilters.size(); ++i)
 			{
 				outputSample = mAPFilters[i].processSample(inputSample, channel);
@@ -159,6 +144,33 @@ float Phaser::getLfoFreq()
 bool Phaser::getLFOWaveform()
 {
 	return *mState.getRawParameterValue(IDs::lfoWaveform);
+}
+
+//==============================================================================
+float Phaser::getCoeff(const int& channel)
+{
+	float coeff = 0.f;
+	auto& lfo = mLFOs[channel];
+	bool  lfoWaveform = getLFOWaveform();
+	lfo.setFreq(getLfoFreq());
+
+	// Rectified sine wave
+	if (lfoWaveform)
+	{
+		lfo.setWaveform(Waveforms::rectSine);
+		float fc = mFcMinSin + mSinA * lfo.getValue();
+		lfo.advanceSamples(1);
+		coeff = calcCoeff(fc);
+	}
+	// Triangular
+	else
+	{
+		lfo.setWaveform(Waveforms::tri);
+		float fc = mFcMinTri + mTriA * lfo.getValue();
+		lfo.advanceSamples(1);
+		coeff = calcCoeff(fc);
+	}
+	return coeff;
 }
 
 //==============================================================================
