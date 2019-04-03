@@ -61,7 +61,6 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 			mAPFilters[i].prepare(spec.numChannels, i);
 			mAPFilters[i].updateCoefficients(coeffMod);
 		}
-
 	}
 }
 
