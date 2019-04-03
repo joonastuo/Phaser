@@ -57,6 +57,7 @@ private:
 	KnobLookAndFeel mKnobLookAndFeel;
 
 	typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+	typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
 
 	// Speed of phaser LFO
 	Label mSpeedLabel;
@@ -72,6 +73,11 @@ private:
 	Label mFeedbackLabel;
 	Slider mFeedbackSlider;
 	std::unique_ptr<SliderAttachment> mFeedbackSliderAttachment;
+
+	// LFO waveform
+	Label mLFOWaveformLabel;
+	ToggleButton mLFOWaveformButton;
+	std::unique_ptr<ButtonAttachment> mLFOWaveformButtonAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaserAudioProcessorEditor)
 };

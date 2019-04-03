@@ -53,7 +53,7 @@ public:
 	// Slider textbox
 	void drawLabel(Graphics& g, Label& label) override
 	{
-		g.setColour(Colours::antiquewhite);
+		g.setColour(Colours::white);
 
 		String text = label.getText();
 		int width = label.getWidth();

@@ -17,5 +17,7 @@ namespace IDs {
 	DECLARE_ID(speed)		// Delay time (0s - 2s)
 	DECLARE_ID(wetness)		// Dry / wet -ratio (0% - 100%)
 	DECLARE_ID(feedback)	// Feedback gain (-100% - 100%)
+	DECLARE_ID(lfoWaveform) // LFO waveform
+
 	#undef DECLARE_ID
 }

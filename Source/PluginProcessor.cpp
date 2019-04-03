@@ -50,6 +50,10 @@ PhaserAudioProcessor::PhaserAudioProcessor()
 												    AudioProcessorParameter::genericParameter,
 												    [](float value, int maxStringLength) {return static_cast<String>(round(value * 100.f * 100.f) / 100.f); },
 												    [](const String& text) {return round((text.getFloatValue() / 100.f) * 100.f) / 100.f; }
+													),
+			std::make_unique<AudioParameterBool>     (IDs::lfoWaveform,
+													 "LFO Waveform",
+													 0
 													)
 		}),
 	mPhaser(mState)

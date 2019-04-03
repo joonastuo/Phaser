@@ -78,6 +78,25 @@ void PhaserAudioProcessorEditor::resized()
 			FlexItem(mFeedbackSlider).withWidth(mSliderWidth).withHeight(mSliderHeight)
 		});
 
+	FlexBox toggleBox;
+	toggleBox.alignContent = FlexBox::AlignContent::center;
+	toggleBox.justifyContent = FlexBox::JustifyContent::center;
+	toggleBox.flexDirection = FlexBox::Direction::column;
+	toggleBox.items.addArray(
+		{
+			FlexItem(mLFOWaveformButton).withWidth(40.f).withHeight(40.f)
+		});
+
+	FlexBox waveformBox;
+	waveformBox.alignContent = FlexBox::AlignContent::center;
+	waveformBox.justifyContent = FlexBox::JustifyContent::center;
+	waveformBox.flexDirection = FlexBox::Direction::column;
+	waveformBox.items.addArray(
+		{
+			FlexItem(mLFOWaveformLabel).withWidth(mLabelWidht).withHeight(mLabelHeight),
+			FlexItem(toggleBox).withWidth(mSliderWidth).withHeight(mSliderHeight)
+		});
+
 	FlexBox firstRowBox;
 	firstRowBox.alignContent = FlexBox::AlignContent::center;
 	firstRowBox.justifyContent = FlexBox::JustifyContent::spaceBetween;
@@ -86,6 +105,16 @@ void PhaserAudioProcessorEditor::resized()
 		{
 			FlexItem(speedBox) .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight),
 			FlexItem(fbBox)	   .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight)
+		});
+	
+	FlexBox secondRowBox;
+	secondRowBox.alignContent = FlexBox::AlignContent::center;
+	secondRowBox.justifyContent = FlexBox::JustifyContent::spaceBetween;
+	secondRowBox.flexDirection = FlexBox::Direction::row;
+	secondRowBox.items.addArray(
+		{
+			FlexItem(mixBox)	 .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight),
+			FlexItem(waveformBox).withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight)
 		});
 
 	// MASTER ======================
@@ -98,8 +127,8 @@ void PhaserAudioProcessorEditor::resized()
 	masterBox.flexDirection = FlexBox::Direction::column;
 	masterBox.items.addArray(
 		{
-			FlexItem(firstRowBox).withWidth(masterItemWidth).withHeight(masterItemHeight),
-			FlexItem(mixBox)	 .withWidth(masterItemWidth).withHeight(masterItemHeight)
+			FlexItem(firstRowBox) .withWidth(masterItemWidth).withHeight(masterItemHeight),
+			FlexItem(secondRowBox).withWidth(masterItemWidth).withHeight(masterItemHeight)
 		});
 
 	auto area = getLocalBounds();
@@ -154,13 +183,24 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 	mFeedbackSlider.setTextValueSuffix(" %");
 	addAndMakeVisible(mFeedbackSlider);
 	mFeedbackSliderAttachment.reset(new SliderAttachment(mState, IDs::feedback, mFeedbackSlider));
+
+	// LFO WAVEFORM =======================================
+	// Label
+	mLFOWaveformLabel.setText("LFO", dontSendNotification);
+	mLFOWaveformLabel.setSize(mLabelWidht, mLabelHeight);
+	mLFOWaveformLabel.setJustificationType(Justification::centred);
+	mLFOWaveformLabel.setFont(mLabelFont);
+	addAndMakeVisible(mLFOWaveformLabel);
+	// Button
+	mLFOWaveformButton.setSize(40.f, 40.f);
+	addAndMakeVisible(mLFOWaveformButton);
+	mLFOWaveformButtonAttachment.reset(new ButtonAttachment(mState, IDs::lfoWaveform, mLFOWaveformButton));
 }
 
 void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 {
 	Colour bgColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
 	g.setColour(bgColour.darker(.8f));
-	//g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
 
 	Path textPath;
 	GlyphArrangement glyphs;
@@ -172,10 +212,6 @@ void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 	g.setColour(Colours::white);
 	float startX = area.getTopLeft().getX() + 4.f;
 	float endX = area.getTopRight().getX() - 4.f;
-	//for (auto i = 1; i < 4; ++i)
-	//{
-	//	g.drawLine(startX, y + 10.f * i, endX, y + 10.f * i, 2.f);
-	//}
 
 	glyphs.addFittedText(mTitleFont, mTitleText, x, y, w, h, Justification::centred, 1);
 	glyphs.createPath(textPath);
@@ -186,8 +222,6 @@ void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 
 	g.setColour(juce::Colours::white);
 	juce::PathStrokeType strokeType(2.5f);
-	//g.strokePath(textPath, strokeType);
-	//g.setColour(juce::Colours::black);
 	g.fillPath(textPath);
 }
 
