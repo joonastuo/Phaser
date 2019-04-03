@@ -28,6 +28,7 @@ private:
 	float getWetness();
 	float getFeedback();
 	float getLfoFreq();
+	float calcCoeff(const float& fc);
 
 	AudioProcessorValueTreeState& mState;
 	DCBlocker mDCBlocker;
@@ -39,6 +40,16 @@ private:
 
 	float mA = 0.45;
 	float mDC = -0.84;
+
+	float mFcFirstLast = 816.075;
+
+	float mFcMinTri = 1217.59f;
+	float mFcMaxTri = 5805.80f;
+	float mTriA = mFcMaxTri - mFcMinTri;
+
+	float mFcMinSin = 4629.31f;
+	float mFcMaxSin = 20236.1f;
+	float mSinA = mFcMaxSin - mFcMinSin;
 
 	float mFeedback[2] = { 0.f };
 };

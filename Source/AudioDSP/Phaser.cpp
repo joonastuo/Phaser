@@ -35,25 +35,34 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 	// Prepare DCBlocker
 	mDCBlocker.prepare(spec.numChannels);
 
-	// Prepare AP filters
-	for (auto i = 0; i < mAPFilters.size(); ++i)
-	{
-		float coeff = 0.0f;
-		if (i == 0 || i == 1 || i == 8 || i == 9)
-			coeff = -0.89;
-		else
-			coeff = -0.49;
-
-		mAPFilters[i].prepare(spec.numChannels, i);
-		mAPFilters[i].updateCoefficients(coeff);
-	}
-
 	// Prepare LFO
 	mLFO.prepare(spec);
 	mLFO.setUnipolar(true);
 	mLFO.setWaveform(3);
 	float lfoFreq = getLfoFreq();
 	mLFO.setFreq(lfoFreq);
+
+	// Prepare AP filters
+	// Coefficient for A1, A2, A9 and A10
+	float coeffFirstLast = calcCoeff(mFcFirstLast);
+	// Coefficient for modulated filters
+	float fc = mFcMinTri + mTriA * mLFO.getValue();
+	float coeffMod = calcCoeff(fc);
+
+	for (auto i = 0; i < mAPFilters.size(); ++i)
+	{
+		if (i == 0 || i == 1 || i == 8 || i == 9)
+		{
+			mAPFilters[i].prepare(spec.numChannels, i);
+			mAPFilters[i].updateCoefficients(coeffFirstLast);
+		}
+		else
+		{
+			mAPFilters[i].prepare(spec.numChannels, i);
+			mAPFilters[i].updateCoefficients(coeffMod);
+		}
+
+	}
 }
 
 //==============================================================================
@@ -67,7 +76,8 @@ void Phaser::process(AudioBuffer<float>& buffer)
 	float lfoFreq = getLfoFreq();
 	mLFO.setFreq(lfoFreq);
 
-	float newCoeff = mDC + mA * mLFO.getValue();
+	float fc = mFcMinTri + mTriA * mLFO.getValue();
+	float newCoeff = calcCoeff(fc);
 	mLFO.advanceBlock();
 
 	for (auto i = 2; i < 8; ++i)
@@ -131,4 +141,10 @@ float Phaser::getLfoFreq()
 {
 	float s = *mState.getRawParameterValue(IDs::speed);
 	return 0.069f * exp(0.04f * s);
+}
+
+//==============================================================================
+float Phaser::calcCoeff(const float & fc)
+{
+	return (tan(M_PI * fc / mSampleRate) - 1) / (tan(M_PI * fc / mSampleRate) + 1);
 }
