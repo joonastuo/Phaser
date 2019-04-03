@@ -155,7 +155,7 @@ float Phaser::getCoeff(const int& channel)
 	lfo.setFreq(getLfoFreq());
 
 	// Rectified sine wave
-	if (lfoWaveform)
+	if (!lfoWaveform)
 	{
 		lfo.setWaveform(Waveforms::rectSine);
 		float fc = mFcMinSin + mSinA * lfo.getValue();

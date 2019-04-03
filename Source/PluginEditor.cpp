@@ -84,7 +84,7 @@ void PhaserAudioProcessorEditor::resized()
 	toggleBox.flexDirection = FlexBox::Direction::column;
 	toggleBox.items.addArray(
 		{
-			FlexItem(mLFOWaveformButton).withWidth(40.f).withHeight(40.f)
+			FlexItem(mLFOWaveformButton).withWidth(20.f).withHeight(40.f)
 		});
 
 	FlexBox waveformBox;
@@ -94,7 +94,7 @@ void PhaserAudioProcessorEditor::resized()
 	waveformBox.items.addArray(
 		{
 			FlexItem(mLFOWaveformLabel).withWidth(mLabelWidht).withHeight(mLabelHeight),
-			FlexItem(toggleBox).withWidth(mSliderWidth).withHeight(mSliderHeight)
+			FlexItem(toggleBox).withWidth(mSliderWidth).withHeight(40.f)
 		});
 
 	FlexBox firstRowBox;
@@ -186,7 +186,7 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 
 	// LFO WAVEFORM =======================================
 	// Label
-	mLFOWaveformLabel.setText("LFO", dontSendNotification);
+	mLFOWaveformLabel.setText("Intense", dontSendNotification);
 	mLFOWaveformLabel.setSize(mLabelWidht, mLabelHeight);
 	mLFOWaveformLabel.setJustificationType(Justification::centred);
 	mLFOWaveformLabel.setFont(mLabelFont);
