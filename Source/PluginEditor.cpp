@@ -21,6 +21,7 @@ PhaserAudioProcessorEditor::PhaserAudioProcessorEditor (PhaserAudioProcessor& p)
 	initialiseGUI();
 }
 
+//==============================================================================
 PhaserAudioProcessorEditor::~PhaserAudioProcessorEditor()
 {
 	// Empty destructor
@@ -33,16 +34,13 @@ void PhaserAudioProcessorEditor::paint (Graphics& g)
 	Colour backgroundColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
     g.fillAll (backgroundColour);
 
-	auto area = getLocalBounds().reduced(mWindowMarginWidth / 2.f, mWindowMarginHeight / 2.f);
+	auto area = getLocalBounds().reduced(static_cast<int>(mWindowMarginWidth / 2.f), static_cast<int>(mWindowMarginHeight / 2.f));
 	// Draw title
 	auto titleArea = area.removeFromBottom(mTitleHeight);
 	drawTitle(g, titleArea.toFloat());
-	// Draw parameter area
-	//area.removeFromBottom(10.f);
-	//g.setColour(backgroundColour.darker(.8));
-	//g.drawRoundedRectangle(area.toFloat(), 10.f, 3.f);
 }
 
+//==============================================================================
 void PhaserAudioProcessorEditor::resized()
 {
 	// Mix ===============================
@@ -52,8 +50,8 @@ void PhaserAudioProcessorEditor::resized()
 	mixBox.flexDirection = FlexBox::Direction::column;
 	mixBox.items.addArray(
 		{
-			FlexItem(mMixLabel) .withWidth(mLabelWidht) .withHeight(mLabelHeight),
-			FlexItem(mMixSlider).withWidth(mSliderWidth).withHeight(mSliderHeight)
+			createItem(mMixLabel, mLabelWidht, mLabelHeight),
+			createItem(mMixSlider, mSliderWidth, mSliderHeight)
 		});
 
 	// Speed
@@ -63,8 +61,8 @@ void PhaserAudioProcessorEditor::resized()
 	speedBox.flexDirection = FlexBox::Direction::column;
 	speedBox.items.addArray(
 		{
-			FlexItem(mSpeedLabel) .withWidth(mLabelWidht) .withHeight(mLabelHeight),
-			FlexItem(mSpeedSlider).withWidth(mSliderWidth).withHeight(mSliderHeight)
+			createItem(mSpeedLabel, mLabelWidht, mLabelHeight),
+			createItem(mSpeedSlider, mSliderWidth, mSliderHeight)
 		});
 
 	// Feedback
@@ -74,8 +72,8 @@ void PhaserAudioProcessorEditor::resized()
 	fbBox.flexDirection = FlexBox::Direction::column;
 	fbBox.items.addArray(
 		{
-			FlexItem(mFeedbackLabel) .withWidth(mLabelWidht) .withHeight(mLabelHeight),
-			FlexItem(mFeedbackSlider).withWidth(mSliderWidth).withHeight(mSliderHeight)
+			createItem(mFeedbackLabel, mLabelWidht, mLabelHeight),
+			createItem(mFeedbackSlider, mSliderWidth, mSliderHeight)
 		});
 
 	FlexBox toggleBox;
@@ -84,7 +82,7 @@ void PhaserAudioProcessorEditor::resized()
 	toggleBox.flexDirection = FlexBox::Direction::column;
 	toggleBox.items.addArray(
 		{
-			FlexItem(mLFOWaveformButton).withWidth(20.f).withHeight(40.f)
+			createItem(mLFOWaveformButton, 20, 40)
 		});
 
 	FlexBox waveformBox;
@@ -93,8 +91,8 @@ void PhaserAudioProcessorEditor::resized()
 	waveformBox.flexDirection = FlexBox::Direction::column;
 	waveformBox.items.addArray(
 		{
-			FlexItem(mLFOWaveformLabel).withWidth(mLabelWidht).withHeight(mLabelHeight),
-			FlexItem(toggleBox).withWidth(mSliderWidth).withHeight(40.f)
+			createItem(mLFOWaveformLabel, mLabelWidht, mLabelHeight),
+			createItem(toggleBox, mSliderWidth, 40)
 		});
 
 	FlexBox firstRowBox;
@@ -103,8 +101,8 @@ void PhaserAudioProcessorEditor::resized()
 	firstRowBox.flexDirection = FlexBox::Direction::row;
 	firstRowBox.items.addArray(
 		{
-			FlexItem(speedBox) .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight),
-			FlexItem(fbBox)	   .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight)
+			createItem(speedBox, (jmax(mSliderWidth, mLabelWidht)), (mLabelHeight + mSliderHeight)),
+			createItem(fbBox, (jmax(mSliderWidth, mLabelWidht)), (mLabelHeight + mSliderHeight))
 		});
 	
 	FlexBox secondRowBox;
@@ -113,13 +111,13 @@ void PhaserAudioProcessorEditor::resized()
 	secondRowBox.flexDirection = FlexBox::Direction::row;
 	secondRowBox.items.addArray(
 		{
-			FlexItem(mixBox)	 .withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight),
-			FlexItem(waveformBox).withWidth(jmax(mSliderWidth, mLabelWidht)).withHeight(mLabelHeight + mSliderHeight)
+			createItem(mixBox, jmax(mSliderWidth, mLabelWidht), mLabelHeight + mSliderHeight),
+			createItem(waveformBox, jmax(mSliderWidth, mLabelWidht),mLabelHeight + mSliderHeight)
 		});
 
 	// MASTER ======================
-	float masterItemWidth = (2 * jmax(mSliderWidth, mLabelWidht)) + mSpaceBetweenW;
-	float masterItemHeight = mSliderHeight + mLabelHeight + mSpaceBetweenH / 2.f;
+	int masterItemWidth = (2 * jmax(mSliderWidth, mLabelWidht)) + mSpaceBetweenW;
+	int masterItemHeight = static_cast<int>(mSliderHeight + mLabelHeight + mSpaceBetweenH / 2.f);
 
 	FlexBox masterBox;
 	masterBox.alignContent = FlexBox::AlignContent::spaceBetween;
@@ -127,16 +125,17 @@ void PhaserAudioProcessorEditor::resized()
 	masterBox.flexDirection = FlexBox::Direction::column;
 	masterBox.items.addArray(
 		{
-			FlexItem(firstRowBox) .withWidth(masterItemWidth).withHeight(masterItemHeight),
-			FlexItem(secondRowBox).withWidth(masterItemWidth).withHeight(masterItemHeight)
+			createItem(firstRowBox, masterItemWidth, masterItemHeight),
+			createItem(secondRowBox, masterItemWidth, masterItemHeight)
 		});
 
 	auto area = getLocalBounds();
 	area = area.reduced(mWindowMarginWidth, mWindowMarginHeight);
-	area.removeFromBottom(mTitleHeight + 10.f);
+	area.removeFromBottom(mTitleHeight + 10);
 	masterBox.performLayout(area.toFloat());
 }
 
+//==============================================================================
 void PhaserAudioProcessorEditor::initialiseGUI()
 {
 	// SPEED =============================================
@@ -192,11 +191,24 @@ void PhaserAudioProcessorEditor::initialiseGUI()
 	mLFOWaveformLabel.setFont(mLabelFont);
 	addAndMakeVisible(mLFOWaveformLabel);
 	// Button
-	mLFOWaveformButton.setSize(40.f, 40.f);
+	mLFOWaveformButton.setSize(40, 40);
 	addAndMakeVisible(mLFOWaveformButton);
 	mLFOWaveformButtonAttachment.reset(new ButtonAttachment(mState, IDs::lfoWaveform, mLFOWaveformButton));
 }
 
+//==============================================================================
+FlexItem PhaserAudioProcessorEditor::createItem(Component & c,const int & width,const int & height)
+{
+	return FlexItem(c).withWidth(static_cast<float>(width)).withHeight(static_cast<float>(height));
+}
+
+//==============================================================================
+FlexItem PhaserAudioProcessorEditor::createItem(FlexBox & fb, const int & width, const int & height)
+{
+	return FlexItem(fb).withWidth(static_cast<float>(width)).withHeight(static_cast<float>(height));
+}
+
+//==============================================================================
 void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 {
 	Colour bgColour = getLookAndFeel().findColour(ResizableWindow::backgroundColourId);
@@ -214,7 +226,7 @@ void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 	glyphs.addFittedText(mTitleFont, mTitleText, x, y, w, h, Justification::centred, 1);
 	glyphs.createPath(textPath);
 
-	g.setColour(bgColour.darker(.4));
+	g.setColour(bgColour.darker(.4f));
 	auto textBounds = textPath.getBounds().expanded(10.f, 10.f);
 	g.fillRoundedRectangle(textBounds.toFloat(), 18.f);
 

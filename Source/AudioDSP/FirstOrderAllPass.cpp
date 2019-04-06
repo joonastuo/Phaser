@@ -23,9 +23,12 @@ FirstOrderAllPass::~FirstOrderAllPass()
 }
 
 //==============================================================================
-void FirstOrderAllPass::prepare(const int& numChannels, const int& filterNum)
+void FirstOrderAllPass::prepare(const int& numChannels)
 {
-	mFilterNum = filterNum;
+	for (auto channel = 0; channel < numChannels; ++channel)
+	{
+		mXh.push_back(0.f);
+	}
 }
 
 //==============================================================================

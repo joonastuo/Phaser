@@ -22,8 +22,7 @@ public:
 	void process(const dsp::ProcessContextReplacing<float>& context);
 private:
 
-	int mNumChannels = 2;
-	float mXh[2][2] = { 0.f };
+	std::vector<std::vector<float>> mXh;
 	const float p = 0.992f;
 	const float b0 = (1.f + p) / 2.f;
 	const float b2 = -1.f * b0;

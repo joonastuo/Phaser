@@ -18,14 +18,13 @@ class FirstOrderAllPass
 public:
 	FirstOrderAllPass();
 	~FirstOrderAllPass();
-	void prepare(const int& numChannels, const int& filterNum);
+	void prepare(const int& numChannels);
 	void processBlock(const dsp::ProcessContextReplacing<float>& context);
 	float processSample(const float& sample, const int& channel);
 	void updateCoefficients(const float& c);
 
 private:
-	float mXh[2] = { 0.0 };
-	int mFilterNum;
-	float mC = -.89;
-	float mOldC = -.89;
+	std::vector<float> mXh;
+	float mC    = -.89f;
+	float mOldC = -.89f;
 };

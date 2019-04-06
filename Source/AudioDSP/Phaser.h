@@ -44,7 +44,7 @@ private:
 	// Array to store feedback values
 	float mFeedback[2] = { 0.f };
 	// Center frequency of A1, A2, A9, A10
-	float mFcFirstLast = 816.075;
+	float mFcFirstLast = 816.075f;
 	// Center frequency of mod AP filters
 	// Triangular
 	float mFcMinTri = 1217.59f;

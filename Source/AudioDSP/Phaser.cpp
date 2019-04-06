@@ -29,7 +29,7 @@ Phaser::~Phaser()
 void Phaser::prepare(dsp::ProcessSpec& spec)
 {
 	// Prepare class members
-	mSampleRate = spec.sampleRate;
+	mSampleRate = static_cast<float>(spec.sampleRate);
 	mDryBuffer.setSize(spec.numChannels, spec.maximumBlockSize);
 
 	// Prepare DCBlocker
@@ -57,12 +57,12 @@ void Phaser::prepare(dsp::ProcessSpec& spec)
 	{
 		if (i == 0 || i == 1 || i == 8 || i == 9)
 		{
-			mAPFilters[i].prepare(spec.numChannels, i);
+			mAPFilters[i].prepare(spec.numChannels);
 			mAPFilters[i].updateCoefficients(coeffFirstLast);
 		}
 		else
 		{
-			mAPFilters[i].prepare(spec.numChannels, i);
+			mAPFilters[i].prepare(spec.numChannels);
 			mAPFilters[i].updateCoefficients(coeffMod);
 		}
 	}
@@ -176,5 +176,5 @@ float Phaser::getCoeff(const int& channel)
 //==============================================================================
 float Phaser::calcCoeff(const float & fc)
 {
-	return -1.f * (1.f - tan(2.f * M_PI * fc * ((1.f / mSampleRate) / 2.f))) / (1.f + tan(2.f * M_PI * fc * ((1.f / mSampleRate) / 2.f)));
+	return static_cast<float>(-1.f * (1.f - tan(2.f * M_PI * fc * ((1.f / mSampleRate) / 2.f))) / (1.f + tan(2.f * M_PI * fc * ((1.f / mSampleRate) / 2.f))));
 }
