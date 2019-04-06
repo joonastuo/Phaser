@@ -29,7 +29,7 @@ void FirstOrderAllPass::prepare(const int& numChannels, const int& filterNum)
 }
 
 //==============================================================================
-void FirstOrderAllPass::processBlock(dsp::ProcessContextReplacing<float>& context)
+void FirstOrderAllPass::processBlock(const dsp::ProcessContextReplacing<float>& context)
 {
 	dsp::AudioBlock<float> inputBlock = context.getInputBlock();
 	dsp::AudioBlock<float> outputBlock = context.getOutputBlock();

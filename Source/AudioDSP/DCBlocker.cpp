@@ -25,7 +25,7 @@ void DCBlocker::prepare(const int& numChannels)
 
 }
 
-void DCBlocker::process(dsp::ProcessContextReplacing<float>& context)
+void DCBlocker::process(const dsp::ProcessContextReplacing<float>& context)
 {
 	dsp::AudioBlock<float> inputBlock = context.getInputBlock();
 	dsp::AudioBlock<float> outputBlock = context.getOutputBlock();
