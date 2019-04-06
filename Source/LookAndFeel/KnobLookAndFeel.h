@@ -14,7 +14,7 @@ class KnobLookAndFeel : public LookAndFeel_V4
 {
 public:
 	void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
-		const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider) override
+		const float rotaryStartAngle, const float rotaryEndAngle, Slider&) override
 	{
 		// Radius of knob
 		auto radius = jmin(width / 2, height / 2) - 5.0f;
@@ -55,7 +55,7 @@ public:
 		String text = label.getText();
 		int width = label.getWidth();
 		int height = label.getHeight();
-		g.setFont(Font(height, Font::plain));
+		g.setFont(Font(static_cast<float>(height), Font::plain));
 		g.drawFittedText(text, 0, 0, width, height, Justification::centred, 1);
 	}
 };

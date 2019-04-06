@@ -22,6 +22,10 @@ DCBlocker::~DCBlocker()
 
 void DCBlocker::prepare(const int& numChannels)
 {
+	for (auto channel = 0; channel < numChannels; ++channel)
+	{
+		mXh.push_back({ 0.0f, 0.0f });
+	}
 
 }
 

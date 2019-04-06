@@ -30,6 +30,8 @@ public:
 	void initialiseGUI();
 
 private:
+	FlexItem createItem(Component& c,const int& width,const int& height);
+	FlexItem createItem(FlexBox& c,const int& width,const int& height);
 	void drawTitle(Graphics& g, Rectangle<float> area);
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -50,7 +52,7 @@ private:
 	const int mSpaceBetweenH = 20;
 	const int mTitleHeight = 40;
 	// Label font
-	Font mLabelFont = Font(mLabelHeight, Font::plain);
+	Font mLabelFont = Font(static_cast<float>(mLabelHeight), Font::plain);
 	String mTitleText = "Phaser";
 	Font mTitleFont = Font(30.f, Font::plain);
 	Slider::SliderStyle mSliderStyle = Slider::SliderStyle::Rotary;
