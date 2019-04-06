@@ -132,7 +132,7 @@ void PhaserAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 {
 	dsp::ProcessSpec spec;
 	spec.maximumBlockSize = samplesPerBlock;
-	spec.numChannels = getNumInputChannels();
+	spec.numChannels = getTotalNumInputChannels();
 	spec.sampleRate = sampleRate;
 	mPhaser.prepare(spec);
 }

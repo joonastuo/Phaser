@@ -210,8 +210,6 @@ void PhaserAudioProcessorEditor::drawTitle(Graphics & g, Rectangle<float> area)
 	float h = area.getHeight();
 
 	g.setColour(Colours::white);
-	float startX = area.getTopLeft().getX() + 4.f;
-	float endX = area.getTopRight().getX() - 4.f;
 
 	glyphs.addFittedText(mTitleFont, mTitleText, x, y, w, h, Justification::centred, 1);
 	glyphs.createPath(textPath);

@@ -22,9 +22,6 @@ public:
 		auto centreX = x + width * 0.5f;
 		auto centreY = y + radius + 12.f;
 
-		auto rx = centreX - radius;
-		auto ry = centreY - radius;
-		auto rw = radius * 2.0f;
 		// current angle of the slider
 		auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 

@@ -34,8 +34,6 @@ void FirstOrderAllPass::processBlock(const dsp::ProcessContextReplacing<float>& 
 	dsp::AudioBlock<float> inputBlock = context.getInputBlock();
 	dsp::AudioBlock<float> outputBlock = context.getOutputBlock();
 
-	float xh = 0.f;
-
 	for (auto channel = 0; channel < 2; ++channel)
 	{
 		const float* input = inputBlock.getChannelPointer(channel);
